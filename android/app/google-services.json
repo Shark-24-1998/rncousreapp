@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "291235678875",
+    "project_id": "rncourseapp-df434",
+    "storage_bucket": "rncourseapp-df434.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291235678875:android:69ee1b244ffcdc72fcd43e",
+        "android_client_info": {
+          "package_name": "com.rncourseapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoqvPwRRKjsr-oD1qbt9OVGVL5me_zO70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "291235678875",
-    "project_id": "rncourseapp-df434",
-    "storage_bucket": "rncourseapp-df434.firebasestorage.app"
+    "project_number": "24286774510",
+    "project_id": "rncourseapp-da3af",
+    "storage_bucket": "rncourseapp-da3af.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:291235678875:android:69ee1b244ffcdc72fcd43e",
+        "mobilesdk_app_id": "1:24286774510:android:a2cbb2db60fc6bf6755fff",
         "android_client_info": {
           "package_name": "com.rncourseapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "24286774510-vm3roupauqo7gu8phufouomn1tvvoc89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rncourseapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "24286774510-hq9j9bh1p0ppeh06ecnsuossre8rakr8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCoqvPwRRKjsr-oD1qbt9OVGVL5me_zO70"
+          "current_key": "AIzaSyDMMJAYiQIvBWIMz6iDJH4cyTMQ_v-hoos"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "24286774510-hq9j9bh1p0ppeh06ecnsuossre8rakr8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

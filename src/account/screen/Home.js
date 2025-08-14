@@ -1,53 +1,73 @@
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { getAuth } from '@react-native-firebase/auth'
-import Clipboard from '@react-native-clipboard/clipboard'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import auth from '@react-native-firebase/auth';
+import Clipboard from '@react-native-clipboard/clipboard';
 import Octicons from 'react-native-vector-icons/Octicons';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-const Home = () => {
-  const auth = getAuth()
-  const user = auth.currentUser
+const Home = ({ navigation }) => {
+  const user = auth().currentUser;
+
   const copyEmail = () => {
-    Clipboard.setString(user.email || "")
-    Alert.alert("copied", "Email Copied on Clipboard")
-  }
+    Clipboard.setString(user?.email || "");
+    Alert.alert("Copied", "Email copied to clipboard");
+  };
+
+  const signOut = async () => {
+    try {
+      
+      await GoogleSignin.signOut();
+      
+      await auth().signOut();
+      navigation.navigate("CreateAccount");
+      Alert.alert("Success", "Signed out successfully");
+    } catch (error) {
+      Alert.alert("Error", "Failed to sign out");
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.container}>
         <View style={styles.card}>
-          <View>
-            <Image
-              source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiL5TYwUUkdkAOCzMiAPMdLvAhPY__rtDX2SogHlMvdoLUQxoT2xmyD0Uja2HoZB5CXFA&usqp=CAU" }}
-              style={styles.avator}
-            />
-          </View>
-          <View style={{ alignItems: "center", gap: 5 }}>
-            <Text style={styles.name}>{user.displayName || "No Name"}</Text>
-            <View style={{flexDirection:"row" ,  gap:5}}>
-              <Text style={styles.email}>{user.email}</Text>
-              <TouchableOpacity onPress={copyEmail}>
-                <Octicons name='copy' size={20} color="white" />
-              </TouchableOpacity>
-              
-            </View>
+       
+          <Image
+            source={{
+              uri: user?.photoURL
+                ? user.photoURL
+                : "https://www.gravatar.com/avatar/?d=mp",
+            }}
+            style={styles.avatar}
+          />
 
+    
+          <Text style={styles.name}>{user?.displayName || "No Name"}</Text>
+
+        
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+            <Text style={styles.email}>{user?.email || "No Email"}</Text>
+            <TouchableOpacity onPress={copyEmail}>
+              <Octicons name="copy" size={20} color="white" />
+            </TouchableOpacity>
           </View>
 
+          
+          <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
+  );
+};
 
-  )
-}
-
-export default Home
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
     flex: 0.5,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white"
   },
   card: {
     width: 400,
@@ -58,13 +78,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 20,
     elevation: 5,
-    gap: 15
+    gap: 15,
+    padding: 20,
   },
-  avator: {
+  avatar: {
     width: 100,
     height: 100,
     borderRadius: 50,
-
   },
   name: {
     color: "white",
@@ -74,5 +94,17 @@ const styles = StyleSheet.create({
   email: {
     color: "white",
     fontSize: 15,
-  }
-})
+  },
+  signOutButton: {
+    backgroundColor: '#FF4757',
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    borderRadius: 25,
+    marginTop: 10,
+  },
+  signOutText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+});

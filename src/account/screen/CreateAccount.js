@@ -1,23 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
-import auth from '@react-native-firebase/auth';
+import auth, { GoogleAuthProvider } from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 
 const CreatAccount = ({ navigation }) => {
-    const [userName , setUserName] = useState("")
+    const [userName, setUserName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
     const createUser = () => {
-       auth()
-       .createUserWithEmailAndPassword(email, password)
-       .then(userCredential =>{
-        return userCredential.user.updateProfile({
-            displayName: userName
-        })
-       })
+        auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                return userCredential.user.updateProfile({
+                    displayName: userName
+                })
+            })
             .then(() => {
                 console.log('User account created & signed in!');
                 navigation.navigate("Home")
@@ -34,6 +34,41 @@ const CreatAccount = ({ navigation }) => {
                 console.error(error);
             });
     }
+
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId: "24286774510-hq9j9bh1p0ppeh06ecnsuossre8rakr8.apps.googleusercontent.com",
+            offlineAccess: true,
+            forceCodeForRefreshToken: true,
+            scopes: ['profile', 'email']
+        })
+    }, [])
+
+    const SignInWithGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+   
+      await GoogleSignin.signIn();
+   
+      const { accessToken } = await GoogleSignin.getTokens();
+
+      if (!accessToken) {
+        throw new Error('No access token found from Google Sign-In');
+      }
+      
+      const googleCredential = GoogleAuthProvider.credential(null, accessToken);
+      const userCredential = await auth().signInWithCredential(googleCredential);
+
+      navigation.navigate("Home");
+    } catch (error) {
+      if (error.code === 'SIGN_IN_CANCELLED') {
+        // User cancelled the sign-in flow
+      } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
+        // Play services not available
+      } 
+    }
+  };
+
 
     return (
         <View style={styles.container}>
@@ -84,7 +119,13 @@ const CreatAccount = ({ navigation }) => {
                 onPress={() => createUser()}
             >
                 <Text style={styles.loginButtonText}>Create Account</Text>
-
+            </TouchableOpacity>
+            <Text style={{ alignSelf: "center", fontSize: 20, fontWeight: "bold", margin: 15 }}>OR</Text>
+            <TouchableOpacity
+                style={[styles.loginButton, { marginTop: 10 }]}
+                onPress={() => SignInWithGoogle()}
+            >
+                <Text style={styles.loginButtonText}>Google Sign-In</Text>
             </TouchableOpacity>
         </View>
     )

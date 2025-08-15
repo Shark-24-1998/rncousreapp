@@ -4,12 +4,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import auth, { GoogleAuthProvider } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import CustomModal from './CustomModal';
 
 
 const CreatAccount = ({ navigation }) => {
     const [userName, setUserName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [showModal, setShowModal] = useState(false)
+    const [pendingAction, setPendingAction] = useState(null)
+
     const createUser = () => {
         auth()
             .createUserWithEmailAndPassword(email, password)
@@ -69,9 +73,41 @@ const CreatAccount = ({ navigation }) => {
     }
   };
 
+  const handleCreateAccount = ()=>{
+    setPendingAction('create')
+     setShowModal(true)
+  }
+
+  const handleGoogleSignIn=()=>{
+    setPendingAction('google')
+    setShowModal(true)
+  }
+  
+  const handleAccept=()=>{
+    setShowModal(false)
+    if(pendingAction === 'create'){
+        createUser()
+    }else if(pendingAction === 'google'){
+        SignInWithGoogle()
+    }
+    setPendingAction(null)
+  }
+
+  const handleDecline=()=>{
+    setShowModal(false)
+    setPendingAction(null)
+  }
 
     return (
         <View style={styles.container}>
+            {
+                showModal && (
+                    <CustomModal 
+                        onAccept={handleAccept}
+                        onDecline={handleDecline}
+                    />
+                )
+            }
             <LinearGradient
                 colors={['#3b5fff', '#6eaaff']}
                 start={{ x: 0, y: 1 }}
@@ -116,14 +152,14 @@ const CreatAccount = ({ navigation }) => {
             </View>
             <TouchableOpacity
                 style={styles.loginButton}
-                onPress={() => createUser()}
+                onPress={handleCreateAccount}
             >
                 <Text style={styles.loginButtonText}>Create Account</Text>
             </TouchableOpacity>
             <Text style={{ alignSelf: "center", fontSize: 20, fontWeight: "bold", margin: 15 }}>OR</Text>
             <TouchableOpacity
                 style={[styles.loginButton, { marginTop: 10 }]}
-                onPress={() => SignInWithGoogle()}
+                onPress={handleGoogleSignIn}
             >
                 <Text style={styles.loginButtonText}>Google Sign-In</Text>
             </TouchableOpacity>

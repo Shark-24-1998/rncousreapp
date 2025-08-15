@@ -11,5 +11,7 @@ import CreatAccount from './src/account/screen/CreateAccount';
 import Navigation from './src/account/Navigation';
 import UseStateHookDemo from './src/hooks/UseStateHookDemo';
 import UseEffectHookDemo from './src/hooks/UseEffectHookDemo';
+import CustomModal from './src/account/screen/CustomModal';
+import UseRefHook from './src/hooks/UseRefHook';
 
-AppRegistry.registerComponent(appName, () => Navigation);
+AppRegistry.registerComponent(appName, () => UseRefHook);

@@ -13,5 +13,9 @@ import UseStateHookDemo from './src/hooks/UseStateHookDemo';
 import UseEffectHookDemo from './src/hooks/UseEffectHookDemo';
 import CustomModal from './src/account/screen/CustomModal';
 import UseRefHook from './src/hooks/UseRefHook';
+import UseComtextHook from './src/hooks/UseContextHook';
+import UseCallBackHook from './src/hooks/useCallBack/UseCallBackHook';
+import LinearGradietDemo from './src/gradient-&-blurview/LinearGradietDemo';
+import BlurViewDemo from './src/gradient-&-blurview/BlurViewDemo';
 
-AppRegistry.registerComponent(appName, () => UseRefHook);
+AppRegistry.registerComponent(appName, () =>BlurViewDemo);

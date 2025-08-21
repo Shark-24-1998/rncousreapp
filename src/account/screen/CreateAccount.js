@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, Platform,  StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import auth, { GoogleAuthProvider } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import CustomModal from './CustomModal';
+
 
 
 const CreatAccount = ({ navigation }) => {
@@ -49,121 +50,129 @@ const CreatAccount = ({ navigation }) => {
     }, [])
 
     const SignInWithGoogle = async () => {
-    try {
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-   
-      await GoogleSignin.signIn();
-   
-      const { accessToken } = await GoogleSignin.getTokens();
+        try {
+            await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-      if (!accessToken) {
-        throw new Error('No access token found from Google Sign-In');
-      }
-      
-      const googleCredential = GoogleAuthProvider.credential(null, accessToken);
-      const userCredential = await auth().signInWithCredential(googleCredential);
+            await GoogleSignin.signIn();
 
-      navigation.navigate("Home");
-    } catch (error) {
-      if (error.code === 'SIGN_IN_CANCELLED') {
-        // User cancelled the sign-in flow
-      } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
-        // Play services not available
-      } 
+            const { accessToken } = await GoogleSignin.getTokens();
+
+            if (!accessToken) {
+                throw new Error('No access token found from Google Sign-In');
+            }
+
+            const googleCredential = GoogleAuthProvider.credential(null, accessToken);
+            const userCredential = await auth().signInWithCredential(googleCredential);
+
+            navigation.navigate("Home");
+        } catch (error) {
+            if (error.code === 'SIGN_IN_CANCELLED') {
+               
+            } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
+               
+            }
+        }
+    };
+
+    const handleCreateAccount = () => {
+        setPendingAction('create')
+        setShowModal(true)
     }
-  };
 
-  const handleCreateAccount = ()=>{
-    setPendingAction('create')
-     setShowModal(true)
-  }
-
-  const handleGoogleSignIn=()=>{
-    setPendingAction('google')
-    setShowModal(true)
-  }
-  
-  const handleAccept=()=>{
-    setShowModal(false)
-    if(pendingAction === 'create'){
-        createUser()
-    }else if(pendingAction === 'google'){
-        SignInWithGoogle()
+    const handleGoogleSignIn = () => {
+        setPendingAction('google')
+        setShowModal(true)
     }
-    setPendingAction(null)
-  }
 
-  const handleDecline=()=>{
-    setShowModal(false)
-    setPendingAction(null)
-  }
+    const handleAccept = () => {
+        setShowModal(false)
+        if (pendingAction === 'create') {
+            createUser()
+        } else if (pendingAction === 'google') {
+            SignInWithGoogle()
+        }
+        setPendingAction(null)
+    }
+
+    const handleDecline = () => {
+        setShowModal(false)
+        setPendingAction(null)
+    }
 
     return (
-        <View style={styles.container}>
-            {
-                showModal && (
-                    <CustomModal 
-                        onAccept={handleAccept}
-                        onDecline={handleDecline}
-                    />
-                )
-            }
-            <LinearGradient
-                colors={['#3b5fff', '#6eaaff']}
-                start={{ x: 0, y: 1 }}
-                end={{ x: 0, y: 0 }}
-                style={styles.heroContainer}
-            >
-                <Entypo name="home" size={70} color="#6eaaff" style={styles.icon} />
-            </LinearGradient>
-            <View style={styles.loginContainer}>
-                <Text style={{ fontSize: 25, fontWeight: "bold" }}>CREATE Account</Text>
-                <View style={styles.inputWrapper}>
-                    <TextInput
-                        placeholder='UserName'
-                        placeholderTextColor="#666"
-                        style={styles.input}
-                        autoCapitalize='none'
-                        keyboardType='email-address'
-                        value={userName}
-                        onChangeText={setUserName}
+        <KeyboardAvoidingView 
+            style={{flex:1 ,  backgroundColor:"white"}}
+            behavior={Platform.OS === "ios" ? "padding" : 'height'}
+        >
+            <TouchableWithoutFeedback style={{backgroundColor:"white"}} onPress={Keyboard.dismiss} >
+            <View style={styles.container}>
+                {
+                    showModal && (
+                        <CustomModal
+                            onAccept={handleAccept}
+                            onDecline={handleDecline}
+                        />
+                    )
+                }
+                <LinearGradient
+                    colors={['#3b5fff', '#6eaaff']}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.heroContainer}
+                >
+                    <Entypo name="home" size={70} color="#6eaaff" style={styles.icon} />
+                </LinearGradient>
+                <View style={styles.loginContainer}>
+                    <Text style={{ fontSize: 25, fontWeight: "bold" }}>CREATE Account</Text>
+                    <View style={styles.inputWrapper}>
+                        <TextInput
+                            placeholder='UserName'
+                            placeholderTextColor="#666"
+                            style={styles.input}
+                            autoCapitalize='none'
+                            keyboardType='email-address'
+                            value={userName}
+                            onChangeText={setUserName}
 
-                    />
-                    <TextInput
-                        placeholder='Email'
-                        placeholderTextColor="#666"
-                        style={styles.input}
-                        autoCapitalize='none'
-                        keyboardType='email-address'
-                        value={email}
-                        onChangeText={setEmail}
+                        />
+                        <TextInput
+                            placeholder='Email'
+                            placeholderTextColor="#666"
+                            style={styles.input}
+                            autoCapitalize='none'
+                            keyboardType='email-address'
+                            value={email}
+                            onChangeText={setEmail}
 
-                    />
-                    <TextInput
-                        placeholder='Password'
-                        placeholderTextColor="#666"
-                        style={styles.input}
-                        secureTextEntry={true}
-                        value={password}
-                        onChangeText={setPassword}
+                        />
+                        <TextInput
+                            placeholder='Password'
+                            placeholderTextColor="#666"
+                            style={styles.input}
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={setPassword}
 
-                    />
+                        />
+                    </View>
                 </View>
+                <TouchableOpacity
+                    style={styles.loginButton}
+                    onPress={handleCreateAccount}
+                >
+                    <Text style={styles.loginButtonText}>Create Account</Text>
+                </TouchableOpacity>
+                <Text style={{ alignSelf: "center", fontSize: 20, fontWeight: "bold", margin: 15 }}>OR</Text>
+                <TouchableOpacity
+                    style={[styles.loginButton, { marginTop: 10 }]}
+                    onPress={handleGoogleSignIn}
+                >
+                    <Text style={styles.loginButtonText}>Google Sign-In</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity
-                style={styles.loginButton}
-                onPress={handleCreateAccount}
-            >
-                <Text style={styles.loginButtonText}>Create Account</Text>
-            </TouchableOpacity>
-            <Text style={{ alignSelf: "center", fontSize: 20, fontWeight: "bold", margin: 15 }}>OR</Text>
-            <TouchableOpacity
-                style={[styles.loginButton, { marginTop: 10 }]}
-                onPress={handleGoogleSignIn}
-            >
-                <Text style={styles.loginButtonText}>Google Sign-In</Text>
-            </TouchableOpacity>
-        </View>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+
     )
 }
 
@@ -171,7 +180,7 @@ export default CreatAccount
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex:1,
         backgroundColor: "white"
     },
     heroContainer: {

@@ -17,5 +17,8 @@ import UseComtextHook from './src/hooks/UseContextHook';
 import UseCallBackHook from './src/hooks/useCallBack/UseCallBackHook';
 import LinearGradietDemo from './src/gradient-&-blurview/LinearGradietDemo';
 import BlurViewDemo from './src/gradient-&-blurview/BlurViewDemo';
+import UseMemoHook from './src/hooks/UseMemoHook';
+import UseReducerHook from './src/hooks/UseReducerHook';
+import PermissionsDemo from './src/permission-handling/PermissionsDemo';
 
-AppRegistry.registerComponent(appName, () =>BlurViewDemo);
+AppRegistry.registerComponent(appName, () => PermissionsDemo);
